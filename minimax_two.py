@@ -191,12 +191,12 @@ class Game:
                 for j in range(0, self.board_size):
                     if board[i][j] == 0:
                         # update board position
-                        if b <= a:
+                        if b < a:
                             return a;
                         board[i][j] = -1
 
                         val = self.move_two(board, a, b, n-1, False)
-                        if val < b:
+                        if val <= b:
                             b = val;
                         board[i][j] = 0
             return b;
@@ -234,11 +234,18 @@ class Game:
                 if board[i][j] == 0:
                     board[i][j] = 1
                     val = self.move_two(board, a, b, z);
+                    print val;
                     if val > a:
                         a = val;
                         pos = (i,j);
                     board[i][j] = 0
 
+        x,y = pos;
+        if x == 0 and y == 0 and board[x][y] != 0:
+            for i in range(0, self.board_size):
+                for j in range(0, self.board_size):
+                    if board[i][j] == 0:
+                        return i,j;
         return pos;
 
     def play_game(self):
