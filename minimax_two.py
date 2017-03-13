@@ -33,12 +33,6 @@ class Game:
         size = (self.board_size, self.board_size);
         self.board = np.zeros(size);
 
-        rowrightdown = (self.board_size, self.board_size + self.board_size - 1);
-        self.board_rowrightdown = np.zeros(rowrightdown);
-
-        colleftdown = (self.board_size + self.board_size - 1, self.board_size);
-        self.board_colleftdown = np.zeros(colleftdown);
-
     def print_board(self):
         top_row = '\n     ';
         space = '   ';
@@ -97,13 +91,8 @@ class Game:
         print col;
         if human:
             self.board[row][col] = -1
-            self.board_rowrightdown[row][col+self.board_size-1-row] = -1
-            self.board_colleftdown[col+row][col] = -1
         else:
             self.board[row][col] = 1
-            self.board_rowrightdown[row][col+self.board_size-1-row] = 1
-            self.board_colleftdown[col+row][col] = 1
-
         self.print_board();
         print self.board;
         self.switch_turn();
@@ -122,14 +111,18 @@ class Game:
         for i in board:
             mystring += 'W'
             for x in i:
-                mystring += str(int(x));
-            mystring += 'W'
+                if x == -1:
+                    mystring += '2'
+                else:
+                    mystring += str(int(x));
         #columns
         for i in range(0, l):
             mystring += 'W'
             for j in range(0, l):
-                mystring += str(int(board[j][i]))
-            mystring += 'W'
+                if board[j][i] == -1:
+                    mystring += '2'
+                else:
+                    mystring += str(int(board[j][i]))
         diags = [board[::-1,:].diagonal(i) for i in range(-1*(l-1),l)]
         diags.extend(board.diagonal(i) for i in range(l-1,l*-1,-1))
 
@@ -137,8 +130,10 @@ class Game:
         for z in x:
             mystring += 'W'
             for y in z:
-                mystring += str(int(y));
-            mystring += 'W'
+                if y == -1:
+                    mystring += '2'
+                else:
+                    mystring += str(int(y));
 
         total_me = mystring.count('00011')*100 + \
             mystring.count('11000')*100 + \
@@ -150,41 +145,42 @@ class Game:
             mystring.count('10110')*600 + \
             mystring.count('11100')*500 + \
             mystring.count('00111')*500 + \
-            mystring.count('01110')*2000 + \
+            mystring.count('01110')*3000 + \
             mystring.count('011010')*900 + \
             mystring.count('010110')*900 + \
             mystring.count('11011')*2000 + \
-            mystring.count('10111')*3000 + \
-            mystring.count('11101')*3000 + \
+            mystring.count('10111')*3500 + \
+            mystring.count('11101')*3500 + \
             mystring.count('11110')*6000 + \
             mystring.count('01111')*6000 + \
             mystring.count('011110')*100000 + \
             mystring.count('11111')*10000000;
-        total_you = mystring.count('000-1-1')*100 + \
-            mystring.count('-1-1000')*100 + \
-            mystring.count('0-100-10')*200 + \
-            mystring.count('0-10-10')*250 + \
-            mystring.count('000-1-1000')*1000 + \
-            mystring.count('-10-10-1')*500 + \
-            mystring.count('-1-10-10')*600 + \
-            mystring.count('-10-1-10')*600 + \
-            mystring.count('-1-1-100')*500 + \
-            mystring.count('00-1-1-1')*500 + \
-            mystring.count('0-1-1-10')*200 + \
-            mystring.count('0-1-10-10')*900 + \
-            mystring.count('0-10-1-10')*900 + \
-            mystring.count('-1-10-1-1')*2000 + \
-            mystring.count('-10-1-1-1')*3000 + \
-            mystring.count('-1-1-10-1')*3000 + \
-            mystring.count('-1-1-1-10')*6000 + \
-            mystring.count('0-1-1-1-1')*6000 + \
-            mystring.count('0-1-1-1-10')*100000  + \
-            mystring.count('-1-1-1-1-1')*10000000;
+        total_you = mystring.count('00022')*100 + \
+            mystring.count('22000')*100 + \
+            mystring.count('020020')*200 + \
+            mystring.count('02020')*250 + \
+            mystring.count('00022000')*1000 + \
+            mystring.count('20202')*500 + \
+            mystring.count('22020')*600 + \
+            mystring.count('20220')*600 + \
+            mystring.count('22200')*500 + \
+            mystring.count('00222')*500 + \
+            mystring.count('02220')*3000 + \
+            mystring.count('022020')*900 + \
+            mystring.count('020220')*900 + \
+            mystring.count('22022')*2000 + \
+            mystring.count('20222')*3500 + \
+            mystring.count('22202')*3500 + \
+            mystring.count('22220')*6000 + \
+            mystring.count('02222')*6000 + \
+            mystring.count('022220')*100000  + \
+            mystring.count('22222')*10000000;
+
         total = total_me - total_you;
         return total;
 
 
-    def move_two(self, board, row_board, col_board, a, b, n, player=True):
+    def move_two(self, board, a, b, n, player=True):
         if n == 0:
             total = self.total_up(board);
             return total;
@@ -198,19 +194,11 @@ class Game:
                         if b <= a:
                             return a;
                         board[i][j] = -1
-                        row_board[i][j+self.board_size-1-i] = -1
-                        col_board[j+i][j] = -1
 
-                        val = self.move_two(board, row_board, col_board, a, b, n-1, False)
+                        val = self.move_two(board, a, b, n-1, False)
                         if val < b:
-                            # print 'b'
-                            # print val;
-                            # print board;
                             b = val;
-
                         board[i][j] = 0
-                        row_board[i][j+self.board_size-1-i] = 0
-                        col_board[j+i][j] = 0
             return b;
         else:
             for i in range(0, self.board_size):
@@ -220,27 +208,20 @@ class Game:
                         if b <= a:
                             return b;
                         board[i][j] = 1
-                        row_board[i][j+self.board_size-1-i] = 1
-                        col_board[j+i][j] = 1
-
-                        val= self.move_two(board, row_board, col_board, a, b, n-1)
-
+                        val= self.move_two(board, a, b, n-1)
                         if val > a:
                             a = val;
-
                         board[i][j] = 0
-                        row_board[i][j+self.board_size-1-i] = 0
-                        col_board[j+i][j] = 0
             return a;
 
-    def lets_make_moves(self, board, row_board, col_board, player=True):
+    def lets_make_moves(self, board, player=True):
         values = [];
         positions = [];
         pos = (0,0);
         z = 1;
-        if self.count < int(self.board_size*3):
+        if self.count < int(self.board_size*2):
             z = 1;
-        elif self.count < int(self.board_size*5):
+        elif self.count < int(self.board_size*4):
             z = 2;
         else:
             z = 3;
@@ -252,18 +233,11 @@ class Game:
             for j in range(0, self.board_size):
                 if board[i][j] == 0:
                     board[i][j] = 1
-                    row_board[i][j+self.board_size-1-i] = 1
-                    col_board[j+i][j] = 1
-                    val = self.move_two(board, row_board, col_board, a, b, z);
+                    val = self.move_two(board, a, b, z);
                     if val > a:
-                        print 'top'
-                        print val;
-                        print board;
                         a = val;
                         pos = (i,j);
                     board[i][j] = 0
-                    row_board[i][j+self.board_size-1-i] = 0
-                    col_board[j+i][j] = 0
 
         return pos;
 
@@ -278,9 +252,7 @@ class Game:
                 var = self.transform_to_board_format(x,x);
                 self.move_played = var;
             else:
-                r = copy.deepcopy(self.board_rowrightdown);
-                c = copy.deepcopy(self.board_colleftdown);
-                y, x = self.lets_make_moves(self.board, r, c)
+                y, x = self.lets_make_moves(self.board)
                 var = self.transform_to_board_format(x,y);
                 self.move_played = var;
             self.place_color(y, x, False)
