@@ -86,15 +86,15 @@ class Game:
         return x, y;
 
     def place_color(self, row, col, human=True):
-        print 'from place color'
-        print row;
-        print col;
+        # print 'from place color'
+        # print row;
+        # print col;
         if human:
             self.board[row][col] = -1
         else:
             self.board[row][col] = 1
         self.print_board();
-        print self.board;
+        # print self.board;
         self.switch_turn();
 
     def transform_to_board_format(self, x, y):
@@ -225,8 +225,6 @@ class Game:
             z = 2;
         else:
             z = 3;
-        print self.count;
-        print 'count';
         a = float('-inf');
         b = float('inf');
         for i in range(0, self.board_size):
@@ -234,7 +232,6 @@ class Game:
                 if board[i][j] == 0:
                     board[i][j] = 1
                     val = self.move_two(board, a, b, z);
-                    print val;
                     if val > a:
                         a = val;
                         pos = (i,j);
