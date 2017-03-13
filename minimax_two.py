@@ -136,6 +136,7 @@ class Game:
                     mystring += str(int(y));
 
         total_me = mystring.count('00011')*100 + \
+            mystring.count('00100')*10 + \
             mystring.count('11000')*100 + \
             mystring.count('010010')*200 + \
             mystring.count('01010')*250 + \
@@ -156,6 +157,7 @@ class Game:
             mystring.count('011110')*100000 + \
             mystring.count('11111')*10000000;
         total_you = mystring.count('00022')*100 + \
+            mystring.count('00200')*10 + \
             mystring.count('22000')*100 + \
             mystring.count('020020')*200 + \
             mystring.count('02020')*250 + \
@@ -191,12 +193,12 @@ class Game:
                 for j in range(0, self.board_size):
                     if board[i][j] == 0:
                         # update board position
-                        if b < a:
+                        if b <= a:
                             return a;
                         board[i][j] = -1
 
                         val = self.move_two(board, a, b, n-1, False)
-                        if val <= b:
+                        if val < b:
                             b = val;
                         board[i][j] = 0
             return b;
@@ -219,12 +221,12 @@ class Game:
         positions = [];
         pos = (0,0);
         z = 1;
-        if self.count < int(self.board_size*2):
+        if self.count < int(self.board_size*3):
             z = 1;
         elif self.count < int(self.board_size*4):
             z = 2;
         else:
-            z = 3;
+            z = 2;
         a = float('-inf');
         b = float('inf');
         for i in range(0, self.board_size):
