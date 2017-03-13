@@ -103,17 +103,9 @@ class Game:
             self.board[row][col] = 1
             self.board_rowrightdown[row][col+self.board_size-1-row] = 1
             self.board_colleftdown[col+row][col] = 1
-        # self.score_board();
-        # t1 = self.sb(self.board_rowrightdown, self.board_size, self.board_size*2 - 1)
-        # t2 = self.sb(self.board_colleftdown, self.board_size*2 - 1, self.board_size)
-        # total = t1 + t2;
-        # print t1;
-        # print t2;
-        # print self.total_up(self.board_rowrightdown, self.board_colleftdown);
+
         self.print_board();
         print self.board;
-        # print self.board_rowrightdown;
-        # print self.board_colleftdown;
         self.switch_turn();
 
     def transform_to_board_format(self, x, y):
@@ -123,8 +115,6 @@ class Game:
 
     def total_up(self, board):
         return self.sb(board, self.board_size)
-        # print t1;
-        # print t2;
 
     def sb(self, board, l):
         mystring = ''
@@ -243,64 +233,6 @@ class Game:
                         col_board[j+i][j] = 0
             return a;
 
-
-    # def move_two(self, board, row_board, col_board, n, player=True):
-    #     #build first tree -> return board, row_board, col_board
-    #
-    #     if n == 0:
-    #         total = self.total_up(row_board, col_board);
-    #
-    #         #is total less than alpha?
-    #
-    #         # total < beta?
-    #         # yes, update beta.
-    #         return total;
-    #     values = [];
-    #     positions = [];
-    #     if player:
-    #         for i in range(0, self.board_size):
-    #             for j in range(0, self.board_size):
-    #                 if board[i][j] == 0:
-    #                     # update board position
-    #                     board[i][j] = -1
-    #                     row_board[i][j+self.board_size-1-i] = -1
-    #                     col_board[j+i][j] = -1
-    #                     # create next play
-    #                     val = self.move_two(board, row_board, col_board, n-1, False);
-    #                     values.append(val);
-    #
-    #                     # is beta' (val) >= alpha?
-    #                     # if yes, alpha = beta'
-    #
-    #                     #set board back
-    #                     board[i][j] = 0
-    #                     row_board[i][j+self.board_size-1-i] = 0
-    #                     col_board[j+i][j] = 0
-    #         if len(values) == 0:
-    #             return 0;
-    #         # print values;
-    #         # print 'min!'
-    #         return min(values);
-    #     else:
-    #         for i in range(0, self.board_size):
-    #             for j in range(0, self.board_size):
-    #                 if board[i][j] == 0:
-    #                     #update board positions
-    #                     board[i][j] = 1
-    #                     row_board[i][j+self.board_size-1-i] = 1
-    #                     col_board[j+i][j] = 1
-    #
-    #                     values.append(self.move_two(board, row_board, col_board, n-1));
-    #
-    #                     #set board back
-    #                     board[i][j] = 0
-    #                     row_board[i][j+self.board_size-1-i] = 0
-    #                     col_board[j+i][j] = 0
-    #         # print values;
-    #         if len(values) == 0:
-    #             return 0;
-    #         return max(values);
-
     def lets_make_moves(self, board, row_board, col_board, player=True):
         values = [];
         positions = [];
@@ -322,31 +254,21 @@ class Game:
                     board[i][j] = 1
                     row_board[i][j+self.board_size-1-i] = 1
                     col_board[j+i][j] = 1
-                    #alpha = -inf beta = inf
-                    # values.append(self.move_two(board, row_board, col_board, z));
                     val = self.move_two(board, row_board, col_board, a, b, z);
                     if val > a:
                         print 'top'
                         print val;
                         print board;
-                        # print row_board;
-                        # print col_board;
                         a = val;
                         pos = (i,j);
                     board[i][j] = 0
                     row_board[i][j+self.board_size-1-i] = 0
                     col_board[j+i][j] = 0
 
-
-
-        # print values;
-        # index = values.index(max(values));
         return pos;
 
     def play_game(self):
         print 'Move played: ' + self.move_played;
-        # print 'player: ' + self.player
-        # print 'turn: ' + self.turn
         self.count = self.count + 1;
         if self.player != self.turn:
             print 'robos turn';
@@ -374,7 +296,6 @@ class Game:
             else:
                 row = int(var[1]) - 1;
             self.place_color(row, col)
-        #expand depth on count...
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='GoBang!');
